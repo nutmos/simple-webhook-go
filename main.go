@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
 	"log"
 	"net/http"
@@ -39,12 +41,22 @@ func handleWebhook(c *gin.Context) {
 		return
 	}
 
-	log.Printf("webhook received: content-type=%q headers=%v body=%s",
-		c.ContentType(), c.Request.Header, body)
+	log.Printf("webhook received: content-type=%q bytes=%d headers=%v",
+		c.ContentType(), len(body), c.Request.Header)
+	log.Printf("webhook body:\n%s", formatBody(body))
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":      "received",
 		"received_at": time.Now().UTC().Format(time.RFC3339),
 		"bytes":       len(body),
 	})
+}
+
+// formatBody pretty-prints JSON bodies and returns anything else unchanged.
+func formatBody(body []byte) string {
+	var out bytes.Buffer
+	if json.Valid(body) && json.Indent(&out, body, "", "  ") == nil {
+		return out.String()
+	}
+	return string(body)
 }
