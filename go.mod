@@ -1,4 +1,4 @@
-module github.com/nutmos/simple-webhook
+module github.com/nutmos/simple-webhook-go
 
 go 1.27.1
 
