@@ -1,0 +1,6 @@
+/simple-webhook
+/simple-webhook-go
+*.exe
+*.test
+*.out
+.DS_Store
